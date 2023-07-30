@@ -64,7 +64,7 @@ class polynomial{
         }
 
         double eval(double x){
-            int sum=0;
+            double sum=0;
             for(int i=0;i<poly_size;i++){
                 sum+=poly[i].coeff*pow(x,(double)poly[i].exponent);
             }
