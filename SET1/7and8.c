@@ -70,9 +70,9 @@ matx_elem* add(matx_elem *a,int sizea, matx_elem *b,int sizeb){
             }
         }
         if(pres_bool==0){
-            (sum+count)->value = (b+count)->value;
-            (sum+count)->row_index = (b+count)->row_index;
-            (sum+count)->col_index = (b+count)->col_index;
+            (sum+count)->value = (b+i)->value;
+            (sum+count)->row_index = (b+i)->row_index;
+            (sum+count)->col_index = (b+i)->col_index;
             count++;
         }
     }
@@ -80,19 +80,39 @@ matx_elem* add(matx_elem *a,int sizea, matx_elem *b,int sizeb){
 }
 
 void display_as_matrix(matx_elem *a, int length){
-    int i,j,k;
+    int i,j,k,printed;
     for (i=0;i<matx_rows;i++){
         for(j=0;j<matx_cols;j++){
+            printed=0;
             for(k=0;k<length;k++){
                 if((a+k)->row_index==i && (a+k)->col_index==j){
                     printf("%d ",(a+k)->value);
+                    printed =1;
                     break;
                 }
+            }
+            if(printed==0){
+                printf("0 ");
             }
         }
         printf("\n");
     }
 }
+
+void non_zero_per_row(matx_elem *a,int length){
+    int non_zero_count=0;
+    int i,j=0;
+    for(i=0;i<matx_rows;i++){
+        non_zero_count=0;
+        for(j=0;j<length;j++){
+            if(a[j].row_index==i && a[j].value!=0){
+                non_zero_count++;
+            }
+        }
+        printf("non zero in row %d - %d\n",i+1,non_zero_count);
+    }
+}
+
 int main(){
     printf("Enter dimensions of matrix :-\nrows : ");
     scanf("%d",&matx_rows);
@@ -123,5 +143,6 @@ int main(){
     //display(sum,sizea+sizeb);
     printf("\nsum :\n");
     display_as_matrix(sum,sizea+sizeb);
+    non_zero_per_row(sum,sizea+sizeb);
 }
 
