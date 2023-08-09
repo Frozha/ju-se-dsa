@@ -12,7 +12,7 @@ node* make_node(int value){
     return new_node;
 }
 
-void insert(node* head,int value, int index){
+node* insert(node* head,int value, int index){
     int curr_index = 1;
     node* current = head;
     while(current->next!=NULL&&curr_index!=index){
@@ -24,6 +24,7 @@ void insert(node* head,int value, int index){
     node* next = current->next;
     current->next = new_ll;
     new_ll->next = next;
+    return new_ll;
 }
 
 void pop(node* head,int index){
@@ -112,7 +113,7 @@ node* reverse(node* head){
     }
     return prev;
 }
-
+/*
 int main(){
     node* head = make_node(1);
     insert(head,2,2);
@@ -123,3 +124,4 @@ int main(){
     printinfo(head);
     delete_ll(head);
 }
+*/
