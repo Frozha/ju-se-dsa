@@ -1,9 +1,10 @@
 #include<stdio.h>
 #include<stdlib.h>
+
 typedef struct node{
     int value;
-    node* previous;
-    node* next;
+    struct node* previous;
+    struct node* next;
 }node;
 
 //c:part
@@ -66,7 +67,8 @@ void rev_print_ll(node *head){
 //a:part
 void insert(node *head,int index,int value){
     node *current = head;
-    for(int i=0;i<index-1;i++){
+    int i;
+    for(i=0;i<index-1;i++){
         if(current!=NULL){
             current=current->next;
         }
@@ -134,6 +136,7 @@ void delete_ll(node *head){
     }
 }
 
+/*
 int main(){
     node *head = (node*)calloc(1,sizeof(node));
     head->value = 1;
@@ -146,4 +149,4 @@ int main(){
     printinfo(head);
     rev_print_ll(head);
     delete_ll(head);
-}
+}*/
