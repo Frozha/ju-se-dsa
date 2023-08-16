@@ -1,13 +1,17 @@
-#include "lnkdlst.c"
+#include "linked_list.c" 
 
 node* set(int n){
     node* head = (node*)calloc(1,sizeof(node));
-    head->value=1;
+    head->data=1;
     int i=2;
     for(;i<n;i++){
         insert(head,i,n);
     }
-    node* last = insert(head,n,n);
+    insert(head,n,n);
+    node *last = head;
+    while(last->next != NULL){
+        last= last->next;
+    }
     last->next = head;
     return head;
 }
@@ -25,16 +29,23 @@ void remove_target_node(node* head, node* target){
 int josephus(int num_of_people,int step_size){
     node* head = set(num_of_people);
     node* current = head;
+    node* targ = current;
+    node* temp;
+    int j=0;
     int i;
     while(current->next!=current){
-        printf("%d removes %d\n",current->value,current->next->value);
-        remove_target_node(current,current->next);
-        for(i=0;i<step_size;i++){
-            current=current->next;
+        targ = current;
+        for(j=0;j<step_size;j++){
+            targ=targ->next;
         }
+        temp = targ->next;
+        printf("%d removes %d\n",current->data,targ->data);
+
+        remove_target_node(current,targ);
+        current = temp;
     }
-    printf("%d wins \n",current->value);
-    int val=current->value;
+    printf("%d wins \n",current->data);
+    int val=current->data;
     free(current);
     return val;
 }
