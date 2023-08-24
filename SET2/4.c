@@ -1,81 +1,45 @@
-#include"linked_list.c"
+#include "stack.c" // Include the stack implementation
 
-node *stack = NULL;
-
-void push(int element){
-    if(stack == NULL){
-        //empty stack condition
-        stack = give_node(element);
-    }
-    else{
-        stack = insert(stack,element,size(stack));
-    }
-}
-
-int peep(){
-    node*current = stack;
-    int i=0;
-    while(current->next!=NULL){
-        current=current->next;
-    } 
-    return current->data;
-}
-
-int pop(){
-    int retval = peep();
-    int end = size(stack)-1;
-    stack = delete_index(stack,end);
-    return retval;
-}
-
-int isempty(){
-    if(stack==NULL)return 1;
-    else return 0;
-}
-
-
-int main(){
+int main() {
+    stack* top = NULL; // Initialize an empty stack
     char choice;
-    int element;
+    float value;
 
     do {
         printf("Stack Menu:\n");
         printf("a. Push element\n");
         printf("b. Pop element\n");
-        printf("c. Peep (Top) element\n");
-        printf("d. Check if stack is empty\n");
-        printf("e. Get stack size\n");
-        printf("f. Exit\n");
+        printf("c. Peek element\n");
+        printf("d. Check if the stack is empty\n");
+        printf("e. Exit\n");
         printf("Enter your choice: ");
         scanf(" %c", &choice);
 
         switch (choice) {
             case 'a':
-                printf("Enter element to push: ");
-                scanf("%d", &element);
-                push(element);
+                printf("Enter value to push: ");
+                scanf("%f", &value);
+                add(&top, value);
                 break;
 
             case 'b':
-                if (!isempty()) {
-                    int popped = pop();
-                    printf("Popped element: %d\n", popped);
+                if (!is_empty(&top)) {
+                    printf("Popped value: %.2f\n", pop(&top));
                 } else {
                     printf("Stack is empty.\n");
                 }
                 break;
 
             case 'c':
-                if (!isempty()) {
-                    int top = peep();
-                    printf("Top element: %d\n", top);
+                if (!is_empty(&top)) {
+                    printf("Peeked value: %.2f\n", peep(&top));
                 } else {
                     printf("Stack is empty.\n");
                 }
                 break;
 
             case 'd':
-                if (isempty()) {
+                if (is_empty(&top)) {
                     printf("Stack is empty.\n");
                 } else {
                     printf("Stack is not empty.\n");
@@ -83,19 +47,16 @@ int main(){
                 break;
 
             case 'e':
-                printf("Stack size: %d\n", size(stack));
-                break;
-
-            case 'f':
-                end(stack);  // Free memory used by the linked list
+                while (!is_empty(&top)) {
+                    pop(&top); // Free remaining stack memory
+                }
                 printf("Exiting...\n");
                 break;
 
             default:
                 printf("Invalid choice. Please choose again.\n");
         }
-    } while (choice != 'f');
+    } while (choice != 'e');
 
     return 0;
-
 }
