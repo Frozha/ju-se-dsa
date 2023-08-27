@@ -1,5 +1,5 @@
 
-#include "queue_linked_list.c"
+#include "queue.c"
 #include "queue_array.c"
 
 int main() {
