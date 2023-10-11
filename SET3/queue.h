@@ -44,17 +44,17 @@ int dequeue(queue*q){
     return a;
 }
 
-int in_queue_at(queue q, int target){
+int in_queue_at(queue* q, int target){
     int i;
-    for(i=0;i<q.tail;i++){
-        if(target == q.data[i]) break;
+    for(i=0;i<q->tail;i++){
+        if(target == q->data[i]) break;
         
     }
-    if(i==q.tail) return -1;
+    if(i==q->tail) return -1;
     else return i;
 }
 
-void display(queue*qu){
+void display_queue(queue*qu){
     printf("[");
     int i;
     for(i=0;i<qu->tail;i++){
@@ -69,7 +69,7 @@ void delete_queue(queue* q){
 }
 
 void remove(queue* q, int target){
-    int i = in_queue_at(*q, target);
+    int i = in_queue_at(q, target);
     if(i==-1) return;
     for(i;i<q->tail-1;i++){
         q->data[i] = q->data[i+1];

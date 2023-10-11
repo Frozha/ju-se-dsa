@@ -13,7 +13,8 @@ int main(){
         printf("6. Exit.\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
-
+        int count[1]={0};
+        queue *pre, *ino;
         switch (choice) {
             case 1:
                 insertion(&root);
@@ -21,12 +22,10 @@ int main(){
             case 2:
                 printf("Inorder Traversal: ");
                 inorder(root);
-                printf("\n");
                 break;
             case 3:
                 printf("Preorder Traversal: ");
                 preorder(root);
-                printf("\n");
                 break;
             case 4:
                 printf("Postorder Traversal: ");
@@ -34,11 +33,19 @@ int main(){
                 printf("\n");
                 break;
             case 5:
-                //display(root,maxDepth(root)-1);
+                count[0]=0;
+                element_count(root,count);
+                pre = init(*count);
+                ino = init(*count);
+                preorder_queue(root,pre);
+                inorder_queue(root,ino);
+                display_tree_preorder_inorder(pre->data,ino->data,*count);
+                delete_queue(pre);
+                delete_queue(ino);
                 break;  
             case 6:
                 printf("Exiting...\n");
-                deleteTree(&root);
+                delete_tree(&root);
                 break;
             default:
                 printf("Invalid choice. Please try again.\n");

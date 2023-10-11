@@ -113,6 +113,20 @@ void inorder(const treenode* root){
     }
 }
 
+void inorder_queue(treenode* root,queue* q){
+    if(root){
+        inorder_queue(root->left_child,q);
+        enqueue(q,root->data);
+        inorder_queue(root->right_child,q);
+    }
+}
+void preorder_queue(treenode* root, queue* q){
+    if(root){
+        enqueue(q,root->data);
+        preorder_queue(root->left_child,q);
+        preorder_queue(root->right_child,q);
+    }
+}
 void preorder(const treenode* root){
     if(root){
         printf("%d ",root->data);
@@ -129,18 +143,24 @@ void postorder(const treenode* root){
     }
 }
 
-void deleteTree(treenode **root) {
+void delete_tree(treenode **root) {
     if (*root == NULL) {
         return;
     }
-    deleteTree(&((*root)->left_child));
-    deleteTree(&((*root)->right_child));
+    delete_tree(&((*root)->left_child));
+    delete_tree(&((*root)->right_child));
     printf("Deleting node with value %d\n", (*root)->data);
     free(*root);
     *root = NULL;
 }
 
-
+void element_count(treenode*root, int*count){
+    if(root){
+        (*count)++;
+        element_count(root->left_child,count);
+        element_count(root->right_child,count);
+    }
+}
 /*
 treenode* treeconversion(int* preordr, int* inordr, int number_of_elements){
     int i=0;

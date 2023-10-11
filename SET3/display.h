@@ -80,7 +80,7 @@ ALGORITHM :
 #include <stdio.h>
 #include"queue.h"
 #include"tree.h"
-int pow(const int a, const int b){
+int powr(const int a, const int b){
     int result=1;
     if(b==0){
         return result;
@@ -94,14 +94,14 @@ int pow(const int a, const int b){
     }
     else return -1;
 }
-
+#define MOD(a) a>0?a:(-1*a)
 #define A(n) (2 * ((n) + 1)) 
-#define B(n) (pow(2, (n) + 2) - 3)
-#define C(n, r) (pow(2, (n) - (r)) - 1)
-#define D(n, r) (pow(2, (n) - (r)) - 1)
-#define E(n, r) pow(2, r) 
-#define F(n, r) (pow(2, (n) - (r) + 1) + 1) 
-#define G(n, r) (pow(2, (n) - (r) + 1) - 1)
+#define B(n) (powr(2, (n) + 2) - 3)
+#define C(n, r) (powr(2, (n) - (r)) - 1)
+#define D(n, r) (powr(2, (n) - (r)) - 1)
+#define E(n, r) powr(2, r) 
+#define F(n, r) (powr(2, (n) - (r) + 1) + 1) 
+#define G(n, r) (powr(2, (n) - (r) + 1) - 1)
 
 int maxDepth(treenode* node) {
     if (node == NULL) {
@@ -118,7 +118,7 @@ void nrp(queue* q, int n, int r) {
     for (i = 0; i < D(n, r); i++) {
         printf("  ");
     }
-    for (i = 0,counter = 0; i < pow(2, r);i++) {
+    for (i = 0,counter = 0; i < powr(2, r);i++) {
         for (j = 0; j < C(n, r); j++) {
             printf("_ ");
         }
@@ -155,7 +155,7 @@ void brp(int n, int r) {
     for (i = 0; i < D(n, r) - 1; i++) {
         printf("  ");
     }
-    for (i = 0; i < pow(2, r); i++) {
+    for (i = 0; i < powr(2, r); i++) {
         printf("( "); // Open Parenthesis
         for (j = 0; j < G(n, r); j++) {
             printf("  ");
@@ -168,7 +168,7 @@ void brp(int n, int r) {
     printf("\n");
 }
 
-void display2(queue** buffer, int max_lvl) {
+void display_tree(queue** buffer, int max_lvl) {
     nrp(buffer[0], max_lvl, 0); // Display root node
     int r = 1; // Current row starts from 1
     while (r <= max_lvl) {
@@ -177,3 +177,127 @@ void display2(queue** buffer, int max_lvl) {
         r++; // Increment row
     }
 }
+
+int left_subtree_inorder_index(int* pre, int* in){
+    int length = sizeof(pre);
+    if(length == 0)return -1;
+    else if(length == 1)return 0;
+    int i= 0;
+    queue* pending = init(length);
+    do{
+       if(in_queue_at(pending,pre[i])==-1){
+            enqueue(pending,pre[i]);
+        }
+        else{
+            remove(pending,pre[i]);
+        }
+        if(in_queue_at(pending,in[i])==-1){
+            enqueue(pending,in[i]);
+        }
+        else{
+            remove(pending,in[i]);
+        }
+        i++;
+    } while (pending->tail!=0&&i<length);
+    if(pending->tail==0){delete_queue(pending);return i-1;}
+    else{delete_queue(pending);return-1;}
+}
+
+int* subarray(int* arr, int a, int b){
+    int* subarr;
+    if(a < b){
+        subarr = (int*)calloc((b - a), sizeof(int));
+        int i;
+        for(i = a; i < b; i++){
+            subarr[i - a] = arr[i];
+        }
+    }
+    else if(a==b){
+        subarr = (int*)calloc(1,sizeof(int));
+        *subarr = arr[a];
+    }
+    else {
+        subarr = NULL;   
+    }
+    return subarr;
+}
+
+queue** create_treeconv_buffer(int max_lvl){
+    int i;
+    queue** buffer = (queue**)calloc(max_lvl+1,sizeof(queue*));
+    if(buffer==NULL)goto z;
+    for(i=0;i<=max_lvl;i++){
+        buffer[i] = init(powr(2,i));
+        if(buffer[i]==NULL)goto y;
+    }
+    return buffer;
+    y:
+    while(i!=0){
+        i--;
+        delete_queue(buffer[i]);
+    }
+    z:
+    free(buffer);
+    printf("mem alloc for buffer failed");
+    return NULL;
+}
+
+void treeconv(int* pre, int* in, int length,int* max_level, int current_level, queue** buffer,int write_buffer_bool){
+    int root_indx = left_subtree_inorder_index(pre,in);
+    int root_dat=-1;
+    if(root_indx>=0&&root_indx<length){root_dat = in[root_indx];}
+    else{
+        if(write_buffer_bool!=0){
+            //printf("root indx = %d Root - %d, level - %de\n",root_indx, root_dat,current_level);
+            enqueue(buffer[current_level],root_dat);
+        }
+        return;
+    }
+    if (current_level > *max_level) {
+        if(write_buffer_bool!=0&&buffer[*max_level]->tail-1!=0){
+            int l;
+            for(l=0;l<powr(2,buffer[*max_level]->tail-1);l++){
+                enqueue(buffer[current_level],-1);
+            }
+        }
+        *max_level = current_level;
+    }
+    if(write_buffer_bool!=0){
+        //printf("root indx = %d Root - %d, level - %d\n",root_indx, root_dat,current_level);
+        enqueue(buffer[current_level],root_dat);
+    }
+    if(length>1){
+        int* l_subtree_pre = subarray(pre,1,root_indx+1);
+        int* l_subtree_in = subarray(in, 0,root_indx);
+        treeconv(l_subtree_pre,l_subtree_in,root_indx,max_level,current_level+1,buffer,write_buffer_bool);
+        int* r_subtree_pre = subarray(pre,root_indx+1,length);
+        int* r_subtree_in = subarray(in, root_indx+1, length);
+        treeconv(r_subtree_pre,r_subtree_in,length-root_indx-1,max_level,current_level+1,buffer,write_buffer_bool);
+        free(l_subtree_pre);
+        free(l_subtree_in);
+        free(r_subtree_pre);
+        free(r_subtree_in);
+    }
+}
+
+void remove_buffer(queue** buffer, int length_of_preorder){
+    int i,level=0;
+    for(;i-1<length_of_preorder;i*=2){level++;}
+    i = level+2;
+    while(i!=0){
+        i--;
+        delete_queue(buffer[i]);
+    }
+    free(buffer);
+}
+
+void display_tree_preorder_inorder(int* pre, int*ino, int num_of_elems){
+    int max_lvl[1]={0};
+    treeconv(pre,ino,num_of_elems,max_lvl,0,NULL,0);
+    queue** buffer= create_treeconv_buffer(*max_lvl);
+    max_lvl[0] = 0;
+    treeconv(pre,ino,num_of_elems,max_lvl,0,buffer,1);
+    display_tree(buffer,*max_lvl);
+    remove_buffer(buffer, num_of_elems);
+}
+
