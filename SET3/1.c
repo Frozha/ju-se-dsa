@@ -1,5 +1,4 @@
-#include"tree.h"
-#include "display.h"
+#include"display.h"
 int main(){
     int choice, data;
     treenode* root = NULL;
@@ -35,7 +34,7 @@ int main(){
                 printf("\n");
                 break;
             case 5:
-                display(root,maxDepth(root)-1);
+                //display(root,maxDepth(root)-1);
                 break;  
             case 6:
                 printf("Exiting...\n");

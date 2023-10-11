@@ -25,7 +25,7 @@ void enqueue(queue* q, int dat){
     }
 }
 
-queue* init(int* arr){
+queue* arr_init(int* arr){
     int len = sizeof(arr);
     int i = 0;
     queue* q = init(len);
@@ -63,7 +63,7 @@ void display(queue*qu){
     printf("\b]\n");
 }
 
-void remove(queue* q){
+void delete_queue(queue* q){
     free(q->data);
     free(q);
 }

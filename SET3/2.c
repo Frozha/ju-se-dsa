@@ -1,7 +1,32 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include"display.h"
-#define MOD(a) a>0?a:(-1*a)
+//#define MOD(a) a>0?a:(-1*a)
+
+int left_subtree_inorder_index(int* pre, int* in){
+    int length = sizeof(pre);
+    if(length == 0)return -1;
+    else if(length == 1)return 0;
+    int i= 0;
+    queue* pending = init(length);
+    do{
+       if(in_queue_at(*pending,pre[i])==-1){
+            enqueue(pending,pre[i]);
+        }
+        else{
+            remove(pending,pre[i]);
+        }
+        if(in_queue_at(*pending,in[i])==-1){
+            enqueue(pending,in[i]);
+        }
+        else{
+            remove(pending,in[i]);
+        }
+        i++;
+    } while (pending->tail!=0&&i<length);
+    if(pending->tail==0){delete(pending);return i-1;}
+    else{delete(pending);return-1;}
+}
 
 int smallest_subarr_indx(int* pre, int* in){
     int length = sizeof(pre);
@@ -26,7 +51,7 @@ int smallest_subarr_indx(int* pre, int* in){
         i++;
     } while (pending->tail!=0&&i<length);
     int k = pending->tail;
-    remove(pending);
+    delete(pending);
     if(k!=0){return -1;}
     else return i-1;
 }
@@ -76,7 +101,7 @@ queue** create_treeconv_buffer(int length){
     y:
     while(j!=0){
         j--;
-        remove(buffer[j]);
+        delete(buffer[j]);
     }
     z:
     free(buffer);
@@ -85,16 +110,16 @@ queue** create_treeconv_buffer(int length){
 }
 
 void treeconv(int* pre, int* in, int length, int current_level, queue** buffer){
-    int root_indx = smallest_subarr_indx(pre,in);
+    int root_indx = left_subtree_inorder_index(pre,in);
     int root_dat=-1;
     if(root_indx>=0&&root_indx<length){root_dat = in[root_indx];}
     else{
-        //printf("root indx = %d Root - %d, level - %d\n",root_indx, root_dat,current_level);
-        enqueue(buffer[current_level],root_dat);
+        printf("root indx = %d Root - %d, level - %d\n",root_indx, root_dat,current_level);
+        //enqueue(buffer[current_level],root_dat);
         return;
     }
-    //printf("root indx = %d Root - %d, level - %d\n",root_indx, root_dat,current_level);
-    enqueue(buffer[current_level],root_dat);
+    printf("root indx = %d Root - %d, level - %d\n",root_indx, root_dat,current_level);
+    //enqueue(buffer[current_level],root_dat);
     if(length>1){
         int* l_subtree_pre = subarray(pre,1,root_indx+1);
         int* l_subtree_in = subarray(in, 0,root_indx);
@@ -117,26 +142,26 @@ void display(queue** buffer,int length_of_preorder){
     }
 }
 */
-void remove(queue** buffer, int length_of_preorder){
+void remove_buffer(queue** buffer, int length_of_preorder){
     int i,level=0;
     for(;i-1<length_of_preorder;i*=2){level++;}
     i = level+2;
     while(i!=0){
         i--;
-        remove(buffer[i]);
+        delete(buffer[i]);
     }
     free(buffer);
 }
 
 int main() {
-    int pre[] = {1,2,4,9,5,3,6,7};
-    int in[] = {4,9,2,5,1,6,3,7};
+    int pre[] = {1,2,4,5};
+    int in[] = {4,5,2,1};
     //printf("%d",minDepth(pre));
     
     int i,j;
-    queue** buffer= create_treeconv_buffer(8);
+    queue** buffer= create_treeconv_buffer(4);
     treeconv(pre,in,8,0,buffer);
     display2(buffer,3);
-    remove(buffer,8);
+    remove_buffer(buffer,8);
     
 }

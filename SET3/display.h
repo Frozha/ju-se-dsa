@@ -78,9 +78,8 @@ ALGORITHM :
 
 */
 #include <stdio.h>
-#include"tree.h"
 #include"queue.h"
-
+#include"tree.h"
 int pow(const int a, const int b){
     int result=1;
     if(b==0){
