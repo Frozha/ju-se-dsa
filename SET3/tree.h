@@ -17,10 +17,6 @@ treenode* give_child(treenode* parent, const int data){
     return child;
 }
 
-//treenode* set_parent_of_child(treenode* parent, treenode* child){
-
-//}
-
 void show_current_node(treenode *node){
     printf("\nCurrent Node at %p with value %d\n",node, node->data);
 }
@@ -120,6 +116,7 @@ void inorder_queue(treenode* root,queue* q){
         inorder_queue(root->right_child,q);
     }
 }
+
 void preorder_queue(treenode* root, queue* q){
     if(root){
         enqueue(q,root->data);
@@ -127,6 +124,7 @@ void preorder_queue(treenode* root, queue* q){
         preorder_queue(root->right_child,q);
     }
 }
+
 void preorder(const treenode* root){
     if(root){
         printf("%d ",root->data);
@@ -161,14 +159,4 @@ void element_count(treenode*root, int*count){
         element_count(root->right_child,count);
     }
 }
-/*
-treenode* treeconversion(int* preordr, int* inordr, int number_of_elements){
-    int i=0;
-    if (number_of_elements>3){
-        while((*(inorder+i)!=*preorder)&&(i<number_of_elements)){
-            i++;
-        }
-        //treeconversion(subarray(preordr,1,i+1),subarray(inordr,,number_of_elements),)
-    }
-    
-}*/
+

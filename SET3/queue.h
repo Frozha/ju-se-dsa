@@ -25,16 +25,6 @@ void enqueue(queue* q, int dat){
     }
 }
 
-queue* arr_init(int* arr){
-    int len = sizeof(arr);
-    int i = 0;
-    queue* q = init(len);
-    for(i;i<len;i++){
-        enqueue(q,arr[i]);
-    }
-    return q;
-}
-
 int dequeue(queue*q){
     int a=-1;
     if(q->tail==0) printf("underflow");
